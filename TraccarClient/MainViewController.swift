@@ -23,7 +23,7 @@ class MainViewController: IASKAppSettingsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Reemplazar el título con una imagen
+        // Configurar el logo como el leftBarButtonItem
         if let logoImage = UIImage(named: "logo") {
             print("Logo cargado correctamente")
             
@@ -36,28 +36,35 @@ class MainViewController: IASKAppSettingsViewController {
             let width = maxHeight * ratio
             logoImageView.frame = CGRect(x: 0, y: 0, width: width, height: maxHeight)
             
-            // Crear un contenedor flexible para centrar el logo
-            let containerView = UIView()
-            containerView.addSubview(logoImageView)
+            // Crear un contenedor flexible para el logo
+            let container = UIView(frame: CGRect(x: 0, y: 0, width: width, height: maxHeight))
+            container.addSubview(logoImageView)
             
-            // Centrar la imagen dentro del contenedor
+            // Configurar constraints para centrar el logo dentro del contenedor
             logoImageView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                logoImageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-                logoImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+                logoImageView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+                logoImageView.centerYAnchor.constraint(equalTo: container.centerYAnchor),
                 logoImageView.heightAnchor.constraint(equalToConstant: maxHeight),
                 logoImageView.widthAnchor.constraint(equalToConstant: width)
             ])
             
-            // Asignar el contenedor como titleView
-            self.navigationItem.titleView = containerView
+            // Asignar el contenedor como un UIBarButtonItem en el leftBarButtonItem
+            let leftItem = UIBarButtonItem(customView: container)
+            self.navigationItem.leftBarButtonItem = leftItem
         } else {
             print("Error: No se encontró la imagen 'logo'")
         }
         
+        // Asegurarse de que no haya texto en el centro
+        self.title = "" // Vaciar el título de la vista
+        self.navigationItem.titleView = nil // Asegurarse de que no hay un titleView
+        
         showCreditsFooter = false
         neverShowPrivacySettings = true
     }
+
+
 
   
     override func viewDidAppear(_ animated: Bool) {
